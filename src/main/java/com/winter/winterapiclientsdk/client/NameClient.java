@@ -23,6 +23,7 @@ import static com.winter.winterapiclientsdk.util.SignUtils.genSign;
 public class NameClient {
 	private String accessKey;
 	private String secretKey;
+	private static final String IP_ADDRESS = "http://localhost:8090";
 
 	public NameClient(String accessKey, String secretKey) {
 		this.accessKey = accessKey;
@@ -30,13 +31,13 @@ public class NameClient {
 	}
 
 	public String getNameByGet(String name) {
-		String result1= HttpUtil.get("http://localhost:8123/api/name/?name=" + name);
+		String result1= HttpUtil.get(IP_ADDRESS + "/api/name/?name=" + name);
 		System.out.println("result1:" + result1);
 		return result1;
 	}
 
 	public String getNameByPost(String name) {
-		String result2= HttpUtil.get("http://localhost:8123/api/name/?name=" + name);
+		String result2= HttpUtil.get(IP_ADDRESS + "/api/name/?name=" + name);
 		System.out.println("result2:" + result2);
 		return result2;
 	}
@@ -46,7 +47,7 @@ public class NameClient {
 		headerMap.put("accessKey", accessKey);
 //		headerMap.put("secretKey", secretKey);
 		headerMap.put("requestParams", requestParams.toString());
-		headerMap.put("nonce", RandomUtil.randomString(4));
+		headerMap.put("nonce", RandomUtil.randomNumbers(4));
 		headerMap.put("timestamp", String.valueOf(System.currentTimeMillis()));
 		headerMap.put("sign", genSign(headerMap, secretKey));
 		return headerMap;
@@ -54,7 +55,7 @@ public class NameClient {
 
 	public String getNameByPost(User user) {
 		String json = JSONUtil.toJsonStr(user);
-		HttpResponse httpResponse = HttpRequest.post("http://localhost:8123/api/name/user").body(json).addHeaders(getHeaderMap(user)).execute();
+		HttpResponse httpResponse = HttpRequest.post(IP_ADDRESS +"/api/name/user").body(json).addHeaders(getHeaderMap(user)).execute();
 		System.out.println("result3:" + httpResponse);
 		System.out.println(httpResponse.getStatus());
 		String result3 = httpResponse.body();
